@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Johan Batista | Frontend Developer & UI/UX Designer</title>
+  <meta name="description" content="Portafolio profesional de johan Batista, Frontend Developer, UI/UX Designer y Creador de Contenido.">
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <!-- Google Fonts: Orbitron & Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+  <!-- EmailJS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+  <style>
+    :root {
+      --font-cyber: 'Orbitron', sans-serif;
+      --font-main: 'Inter', sans-serif;
+      --neon-blue: #00f3ff;
+      --neon-cyan: #0d6efd;
+      --neon-yellow: #ffee00;
+      --neon-green: #00ff66;
+      --neon-pink: #ff007f;
+      --bg-dark: #0a0c10;
+      --card-bg-dark: rgba(16, 20, 28, 0.85);
+      --text-dark: #f8f9fa;
+      --bg-light: #f4f6f9;
+      --card-bg-light: rgba(255, 255, 255, 0.9);
+      --text-light: #0f172a;
+      --border-cyber: rgba(0, 243, 255, 0.3);
+    }
+
+    /* Estilos Generales */
+    body {
+      font-family: var(--font-main);
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+      transition: background-color 0.3s ease, color 0.3s ease;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    [data-bs-theme="light"] body {
+      background-color: var(--bg-light);
+      color: var(--text-light);
+    }
+
+    /* Canvas Matrix de Fondo */
+    #matrix-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0.35;
+    }
+
+    /* Tipografía Cyberpunk */
+    .cyber-title {
+      font-family: var(--font-cyber);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .glow-text {
+      color: var(--neon-blue);
+      text-shadow: 0 0 10px rgba(0, 243, 255, 0.6);
+    }
+
+    [data-bs-theme="light"] .glow-text {
+      color: #007799;
+      text-shadow: none;
+      font-weight: 700;
+    }
+
+    /* Tarjetas con Efecto Glassmorphism */
+    .cyber-card {
+      background: var(--card-bg-dark);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-cyber);
+      border-radius: 12px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-bs-theme="light"] .cyber-card {
+      background: var(--card-bg-light);
+      border-color: rgba(13, 110, 253, 0.2);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .cyber-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
+      border-color: var(--neon-blue);
+    }
+
+    /* Navbar */
+    .navbar {
+      background: rgba(10, 12, 16, 0.85) !important;
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border-cyber);
+    }
+
+    [data-bs-theme="light"] .navbar {
+      background: rgba(244, 246, 249, 0.85) !important;
+      border-bottom-color: rgba(0, 0, 0, 0.1);
+    }
+
+    /* Imagen de Perfil Hero */
+    .profile-img-container {
+      position: relative;
+      display: inline-block;
+    }
+
+    .profile-img {
+      width: 170px;
+      height: 170px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid var(--neon-blue);
+      box-shadow: 0 0 25px rgba(0, 243, 255, 0.5);
+    }
+
+    /* Botones Ciberpunk */
+    .btn-cyber {
+      font-family: var(--font-cyber);
+      background: transparent;
+      color: var(--neon-blue);
+      border: 1px solid var(--neon-blue);
+      box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .btn-cyber:hover {
+      background: var(--neon-blue);
+      color: #000;
+      box-shadow: 0 0 20px rgba(0, 243, 255, 0.8);
+    }
+
+    .btn-dodgerblue {
+      background-color: #1e90ff !important;
+      color: #ffffff !important;
+      font-weight: 600;
+      border: none;
+      box-shadow: 0 0 15px rgba(30, 144, 255, 0.4);
+    }
+
+    .btn-dodgerblue:hover {
+      background-color: #0066cc !important;
+      box-shadow: 0 0 25px rgba(30, 144, 255, 0.8);
+    }
+
+    /* Filtros de Proyectos */
+    .btn-filter.active {
+      background-color: var(--neon-blue);
+      color: #000 !important;
+      font-weight: bold;
+    }
+
+    /* Footer Estilo Luminoso */
+    footer {
+      border-top: 1px solid var(--border-cyber);
+      background: rgba(5, 7, 10, 0.95);
+    }
+
+    [data-bs-theme="light"] footer {
+      background: #ffffff;
+      border-top-color: rgba(0, 0, 0, 0.1);
+    }
+
+    .social-icon {
+      font-size: 1.6rem;
+      color: var(--neon-blue);
+      transition: all 0.3s ease;
+    }
+
+    .social-icon:hover {
+      color: var(--neon-yellow);
+      transform: scale(1.2) rotate(5deg);
+      text-shadow: 0 0 12px var(--neon-yellow);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Canvas: Matrix Effect -->
+  <canvas id="matrix-canvas"></canvas>
+
+  <!-- 1. NAVBAR -->
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+      <a class="navbar-brand cyber-title glow-text fw-bold fs-4" href="#">
+        <i class="fa-solid fa-terminal me-2"></i>JB.EXE
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto align-items-center">
+          <li class="nav-item"><a class="nav-link" href="#hero">⚡ Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="#stack">🛠️ Stack</a></li>
+          <li class="nav-item"><a class="nav-link" href="#proyectos">🚀 Proyectos</a></li>
+          <li class="nav-item"><a class="nav-link" href="#experiencia">💼 Experiencia</a></li>
+          <li class="nav-item"><a class="nav-link" href="#videos">🎬 Videos</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contacto">✉️ Contacto</a></li>
+          <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
+            <button class="btn btn-cyber btn-sm px-3 py-2 rounded-pill" id="theme-toggle">
+              <i class="fa-solid fa-moon me-1"></i> Modo
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 2. SECCIÓN HERO -->
+  <section id="hero" class="min-vh-100 d-flex align-items-center pt-5">
+    <div class="container py-5">
+      <div class="row align-items-center gy-4">
+        <div class="col-lg-8 order-2 order-lg-1">
+          <div class="pe-lg-4">
+            <span class="badge bg-outline-info text-info border border-info mb-3 px-3 py-2 rounded-pill fs-6">
+              ⚡ Disponible para proyectos Freelance & Contratación
+            </span>
+            <h1 class="display-3 fw-bold cyber-title mb-2">
+              <span class="text-white">Johan</span> <span class="glow-text">Batista</span>
+            </h1>
+            <h2 class="h3 text-warning mb-4 fw-semibold">
+              💻 Frontend Developer & UI/UX Designer
+            </h2>
+            <p class="lead fs-5 mb-4 text-opacity-75">
+              🎬 Creador de contenido de YouTube y desarrollo de páginas web modernas. Especializado en crear interfaces de usuario minimalistas, interactivas, responsivas y optimizadas para rendimiento y SEO.
+            </p>
+            <div class="d-flex gap-3 flex-wrap">
+              <a href="#contacto" class="btn btn-cyber btn-lg px-4">⚡ Contáctame</a>
+              <a href="#proyectos" class="btn btn-outline-light btn-lg px-4">🚀 Ver Portafolio</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 order-1 order-lg-2 text-center">
+          <div class="profile-img-container">
+            <img src="https://avatars.githubusercontent.com/u/137714801?s=96&v=4" alt="Johan Batista" class="profile-img mb-3">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. STACK TECNOLÓGICO -->
+  <section id="stack" class="py-5">
+    <div class="container py-4">
+      <h2 class="text-center cyber-title glow-text mb-5">
+        🛠️ Stack Tecnológico
+      </h2>
+      <div class="row g-4 justify-content-center">
+        <div class="col-6 col-md-4 col-lg-2">
+          <div class="cyber-card p-4 text-center h-100">
+            <i class="fa-brands fa-html5 fa-3x text-danger mb-3"></i>
+            <h3 class="h6 fw-bold m-0">HTML5</h3>
+          </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+          <div class="cyber-card p-4 text-center h-100">
+            <i class="fa-brands fa-css3-alt fa-3x text-primary mb-3"></i>
+            <h3 class="h6 fw-bold m-0">CSS3</h3>
+          </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+          <div class="cyber-card p-4 text-center h-100">
+            <i class="fa-brands fa-js fa-3x text-warning mb-3"></i>
+            <h3 class="h6 fw-bold m-0">JavaScript</h3>
+          </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+          <div class="cyber-card p-4 text-center h-100">
+            <i class="fa-brands fa-react fa-3x text-info mb-3"></i>
+            <h3 class="h6 fw-bold m-0">React</h3>
+          </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+          <div class="cyber-card p-4 text-center h-100">
+            <i class="fa-brands fa-bootstrap fa-3x text-purple mb-3" style="color: #7952b3;"></i>
+            <h3 class="h6 fw-bold m-0">Bootstrap 5</h3>
+          </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+          <div class="cyber-card p-4 text-center h-100">
+            <i class="fa-brands fa-figma fa-3x text-success mb-3"></i>
+            <h3 class="h6 fw-bold m-0">UI/UX Design</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. SECCIÓN DE PROYECTOS -->
+  <section id="proyectos" class="py-5">
+    <div class="container py-4">
+      <h2 class="text-center cyber-title glow-text mb-4">🚀 Proyectos Destacados</h2>
+      
+      <!-- Filtros -->
+      <div class="d-flex justify-content-center gap-2 mb-5 flex-wrap">
+        <button class="btn btn-outline-info btn-filter active px-4 rounded-pill" onclick="filterProjects('all')">Todos</button>
+        <button class="btn btn-outline-info btn-filter px-4 rounded-pill" onclick="filterProjects('web')">Web</button>
+        <button class="btn btn-outline-info btn-filter px-4 rounded-pill" onclick="filterProjects('app')">Apps</button>
+        <button class="btn btn-outline-info btn-filter px-4 rounded-pill" onclick="filterProjects('diseno')">Diseño</button>
+      </div>
+
+      <div class="row g-4" id="projects-grid">
+        <!-- Proyectos Web -->
+        <div class="col-md-6 col-lg-4 project-item web">
+          <div class="cyber-card h-100 overflow-hidden">
+            <img src="https://picsum.photos/seed/web1/600/400" class="card-img-top" alt="Proyecto Web 1">
+            <div class="card-body p-4">
+              <span class="badge bg-info text-dark mb-2">Web</span>
+              <h3 class="h5 fw-bold text-warning">E-Commerce Cyberpunk</h3>
+              <p class="card-text opacity-75">Tienda en línea interactiva optimizada para SEO con carrito en tiempo real.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 project-item web">
+          <div class="cyber-card h-100 overflow-hidden">
+            <img src="https://picsum.photos/seed/web2/600/400" class="card-img-top" alt="Proyecto Web 2">
+            <div class="card-body p-4">
+              <span class="badge bg-info text-dark mb-2">Web</span>
+              <h3 class="h5 fw-bold text-warning">SaaS Dashboard AI</h3>
+              <p class="card-text opacity-75">Panel de administración para analítica de datos en modo oscuro estricto.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 project-item web">
+          <div class="cyber-card h-100 overflow-hidden">
+            <img src="https://picsum.photos/seed/web3/600/400" class="card-img-top" alt="Proyecto Web 3">
+            <div class="card-body p-4">
+              <span class="badge bg-info text-dark mb-2">Web</span>
+              <h3 class="h5 fw-bold text-warning">Plataforma Streaming</h3>
+              <p class="card-text opacity-75">Sitio web responsivo para reproducción de contenido multimedia en alta resolución.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Proyectos Apps -->
+        <div class="col-md-6 col-lg-4 project-item app">
+          <div class="cyber-card h-100 overflow-hidden">
+            <img src="https://picsum.photos/seed/app1/600/400" class="card-img-top" alt="Proyecto App 1">
+            <div class="card-body p-4">
+              <span class="badge bg-success text-dark mb-2">App</span>
+              <h3 class="h5 fw-bold text-warning">Crypto Tracker App</h3>
+              <p class="card-text opacity-75">Aplicación móvil para seguimiento de criptomonedas y alertas personalizadas.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 project-item app">
+          <div class="cyber-card h-100 overflow-hidden">
+            <img src="https://picsum.photos/seed/app2/600/400" class="card-img-top" alt="Proyecto App 2">
+            <div class="card-body p-4">
+              <span class="badge bg-success text-dark mb-2">App</span>
+              <h3 class="h5 fw-bold text-warning">Task Manager Pro</h3>
+              <p class="card-text opacity-75">Gestor de tareas colaborativo con sincronización en la nube e interfaz minimalista.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 project-item app">
+          <div class="cyber-card h-100 overflow-hidden">
+            <img src="https://picsum.photos/seed/app3/600/400" class="card-img-top" alt="Proyecto App 3">
+            <div class="card-body p-4">
+              <span class="badge bg-success text-dark mb-2">App</span>
+              <h3 class="h5 fw-bold text-warning">Fitness Routine App</h3>
+              <p class="card-text opacity-75">Aplicación de entrenamiento físico con estadísticas avanzadas y temporizador.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Proyectos Diseño -->
+        <div class="col-md-6 col-lg-4 project-item diseno">
+          <div class="cyber-card h-100 overflow-hidden">
+            <img src="https://picsum.photos/seed/des1/600/400" class="card-img-top" alt="Proyecto Diseño 1">
+            <div class="card-body p-4">
+              <span class="badge bg-warning text-dark mb-2">Diseño</span>
+              <h3 class="h5 fw-bold text-warning">Design System Neon</h3>
+              <p class="card-text opacity-75">Sistema de diseño completo en Figma con componentes accesibles y guías de estilo.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 project-item diseno">
+          <div class="cyber-card h-100 overflow-hidden">
+            <img src="https://picsum.photos/seed/des2/600/400" class="card-img-top" alt="Proyecto Diseño 2">
+            <div class="card-body p-4">
+              <span class="badge bg-warning text-dark mb-2">Diseño</span>
+              <h3 class="h5 fw-bold text-warning">Rediseño UI/UX FinTech</h3>
+              <p class="card-text opacity-75">Investigación de usuarios y prototipo de alta fidelidad para banca digital.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 project-item diseno">
+          <div class="cyber-card h-100 overflow-hidden">
+            <img src="https://picsum.photos/seed/des3/600/400" class="card-img-top" alt="Proyecto Diseño 3">
+            <div class="card-body p-4">
+              <span class="badge bg-warning text-dark mb-2">Diseño</span>
+              <h3 class="h5 fw-bold text-warning">Branding & Identity</h3>
+              <p class="card-text opacity-75">Manual de marca, logotipo y assets gráficos para canal de tecnología.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. EXPERIENCIA LABORAL -->
+  <section id="experiencia" class="py-5">
+    <div class="container py-4">
+      <h2 class="text-center cyber-title glow-text mb-5">💼 Experiencia Laboral</h2>
+      <div class="row g-4 justify-content-center">
+        <div class="col-lg-4 col-md-6">
+          <div class="cyber-card p-4 h-100 d-flex flex-column justify-content-between">
+            <div>
+              <span class="text-info fw-bold">2023 - Presente</span>
+              <h3 class="h5 fw-bold text-warning mt-2">Frontend Developer</h3>
+              <h4 class="h6 text-muted mb-3">Freelance / Proyectos Independientes</h4>
+              <p class="opacity-75">Desarrollo de sitios web a medida con HTML5, CSS3, JavaScript y Bootstrap 5. Optimización SEO y diseño responsive adaptado a clientes globales.</p>
+            </div>
+            <div class="mt-3">
+              <span class="badge bg-outline-info text-info border border-info">React</span>
+              <span class="badge bg-outline-info text-info border border-info">Bootstrap</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="cyber-card p-4 h-100 d-flex flex-column justify-content-between">
+            <div>
+              <span class="text-info fw-bold">2022 - Presente</span>
+              <h3 class="h5 fw-bold text-warning mt-2">Creador de Contenido</h3>
+              <h4 class="h6 text-muted mb-3">YouTube Tech Channel</h4>
+              <p class="opacity-75">Producción de tutoriales de programación, diseño web y tecnología. Creación de marca personal y comunidad orientada al desarrollo web.</p>
+            </div>
+            <div class="mt-3">
+              <span class="badge bg-outline-info text-info border border-info">YouTube</span>
+              <span class="badge bg-outline-info text-info border border-info">UI/UX</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="cyber-card p-4 h-100 d-flex flex-column justify-content-between">
+            <div>
+              <span class="text-info fw-bold">2021 - 2023</span>
+              <h3 class="h5 fw-bold text-warning mt-2">UI/UX Designer</h3>
+              <h4 class="h6 text-muted mb-3">Estudio Digital</h4>
+              <p class="opacity-75">Diseño de wireframes, prototipos interactivos en Figma y desarrollo de interfaces minimalistas centradas en la experiencia de usuario.</p>
+            </div>
+            <div class="mt-3">
+              <span class="badge bg-outline-info text-info border border-info">Figma</span>
+              <span class="badge bg-outline-info text-info border border-info">Prototipado</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. VIDEOS DESTACADOS -->
+  <section id="videos" class="py-5">
+    <div class="container py-4">
+      <h2 class="text-center cyber-title glow-text mb-5">🎬 Videos Destacados</h2>
+      <div class="row g-4">
+        <!-- Video 1 -->
+        <div class="col-lg-4 col-md-6">
+          <div class="cyber-card h-100 p-3">
+            <div class="ratio ratio-16x9 rounded overflow-hidden mb-3">
+              <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Tutorial 1" allowfullscreen></iframe>
+            </div>
+            <h3 class="h6 fw-bold text-warning">■ Tutorial: Desarrollo Web Moderno con Bootstrap 5</h3>
+          </div>
+        </div>
+        <!-- Video 2 -->
+        <div class="col-lg-4 col-md-6">
+          <div class="cyber-card h-100 p-3">
+            <div class="ratio ratio-16x9 rounded overflow-hidden mb-3">
+              <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Tutorial 2" allowfullscreen></iframe>
+            </div>
+            <h3 class="h6 fw-bold text-warning">■ Guía UI/UX: Estética Ciberpunk y Modo Oscuro</h3>
+          </div>
+        </div>
+        <!-- Video 3 -->
+        <div class="col-lg-4 col-md-6">
+          <div class="cyber-card h-100 p-3">
+            <div class="ratio ratio-16x9 rounded overflow-hidden mb-3">
+              <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Tutorial 3" allowfullscreen></iframe>
+            </div>
+            <h3 class="h6 fw-bold text-warning">■ JavaScript Avanzado: Efectos Visuales e Interactividad</h3>
+          </div>
+        </div>
+
+        <!-- 9 BLOQUES ADICIONALES COMENTADOS
+        <div class="col-lg-4 col-md-6">
+          <div class="cyber-card h-100 p-3">
+            <div class="ratio ratio-16x9 rounded overflow-hidden mb-3">
+              <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video 4" allowfullscreen></iframe>
+            </div>
+            <h3 class="h6 fw-bold text-warning">■ Video 4: Optimización SEO para Frontend</h3>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="cyber-card h-100 p-3">
+            <div class="ratio ratio-16x9 rounded overflow-hidden mb-3">
+              <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video 5" allowfullscreen></iframe>
+            </div>
+            <h3 class="h6 fw-bold text-warning">■ Video 5: React Componentes y Hooks</h3>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="cyber-card h-100 p-3">
+            <div class="ratio ratio-16x9 rounded overflow-hidden mb-3">
+              <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video 6" allowfullscreen></iframe>
+            </div>
+            <h3 class="h6 fw-bold text-warning">■ Video 6: Creación de Portafolio desde Cero</h3>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="cyber-card h-100 p-3">
+            <div class="ratio ratio-16x9 rounded overflow-hidden mb-3">
+              <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video 7" allowfullscreen></iframe>
+            </div>
+            <h3 class="h6 fw-bold text-warning">■ Video 7: Dominando CSS Grid y Flexbox</h3>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="cyber-card h-100 p-3">
+            <div class="ratio ratio-16x9 rounded overflow-hidden mb-3">
+              <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video 8" allowfullscreen></iframe>
+            </div>
+            <h3 class="h6 fw-bold text-warning">■ Video 8: Animaciones con Canvas y JS</h3>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="cyber-card h-100 p-3">
+            <div class="ratio ratio-16x9 rounded overflow-hidden mb-3">
+              <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video 9" allowfullscreen></iframe>
+            </div>
+            <h3 class="h6 fw-bold text-warning">■ Video 9: Figma a Código HTML/CSS</h3>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="cyber-card h-100 p-3">
+            <div class="ratio ratio-16x9 rounded overflow-hidden mb-3">
+              <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video 10" allowfullscreen></iframe>
+            </div>
+            <h3 class="h6 fw-bold text-warning">■ Video 10: Integración de APIs REST en JS</h3>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="cyber-card h-100 p-3">
+            <div class="ratio ratio-16x9 rounded overflow-hidden mb-3">
+              <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video 11" allowfullscreen></iframe>
+            </div>
+            <h3 class="h6 fw-bold text-warning">■ Video 11: Despliegue con GitHub Pages</h3>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="cyber-card h-100 p-3">
+            <div class="ratio ratio-16x9 rounded overflow-hidden mb-3">
+              <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video 12" allowfullscreen></iframe>
+            </div>
+            <h3 class="h6 fw-bold text-warning">■ Video 12: Tendencias UI/UX Ciberpunk</h3>
+          </div>
+        </div>
+        -->
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. FORMULARIO DE CONTACTO -->
+  <section id="contacto" class="py-5">
+    <div class="container py-4">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="cyber-card p-4 p-md-5">
+            <h2 class="text-center cyber-title glow-text mb-4">✉️ Envíame un Mensaje</h2>
+            <p class="text-center opacity-75 mb-4">¿Tienes una idea de proyecto o propuesta de trabajo? Escríbeme directamente.</p>
+            
+            <form id="contact-form" class="needs-validation" novalidate>
+              <div class="mb-3">
+                <label for="name" class="form-label font-monospace">■ Nombre Completo</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-dark text-info border-secondary"><i class="fa-solid fa-user"></i></span>
+                  <input type="text" class="form-label form-control bg-dark text-white border-secondary" id="name" required placeholder="Tu nombre">
+                  <div class="invalid-feedback">Por favor ingresa tu nombre.</div>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="email" class="form-label font-monospace">■ Correo Electrónico</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-dark text-info border-secondary"><i class="fa-solid fa-envelope"></i></span>
+                  <input type="email" class="form-control bg-dark text-white border-secondary" id="email" required placeholder="correo@ejemplo.com">
+                  <div class="invalid-feedback">Por favor ingresa un correo válido.</div>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="phone" class="form-label font-monospace">■ Teléfono</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-dark text-info border-secondary"><i class="fa-solid fa-phone"></i></span>
+                  <input type="tel" class="form-control bg-dark text-white border-secondary" id="phone" placeholder="+1 (809) 000-0000">
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <label for="message" class="form-label font-monospace">■ Mensaje</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-dark text-info border-secondary"><i class="fa-solid fa-comment"></i></span>
+                  <textarea class="form-control bg-dark text-white border-secondary" id="message" rows="4" required placeholder="Escribe tu mensaje aquí..."></textarea>
+                  <div class="invalid-feedback">Por favor escribe un mensaje.</div>
+                </div>
+              </div>
+
+              <div class="text-center">
+                <button type="submit" class="btn btn-dodgerblue btn-lg px-5 rounded-pill">Enviar</button>
+              </div>
+            </form>
+
+            <div id="form-alert" class="alert alert-success mt-4 d-none text-center font-monospace" role="alert">
+              ■ Mensaje enviado correctamente
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. FOOTER LUMINOSO -->
+  <footer class="py-4 text-center">
+    <div class="container">
+      <div class="d-flex justify-content-center gap-4 mb-3">
+        <a href="https://www.linkedin.com/in/johan-batista-788214244" target="_blank" class="social-icon" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+        <a href="https://github.com/johnbasa22" target="_blank" class="social-icon" title="GitHub"><i class="fa-brands fa-github"></i></a>
+        <a href="https://wa.me/18097191917" target="_blank" class="social-icon" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+        <a href="https://www.instagram.com/johnba19_/" target="_blank" class="social-icon" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+      </div>
+      <p class="mb-2 font-monospace text-info opacity-75">© 2026 Johan Batista. Todos los derechos reservados.</p>
+      <a href="#hero" class="btn btn-sm btn-cyber rounded-circle mt-2" title="Volver arriba">
+        <i class="fa-solid fa-arrow-up"></i>
+      </a>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/bootstrap.bundle.min.js"></script>
+
+  <!-- JavaScript Lógica de la Aplicación -->
+  <script>
+    // --- 1. Canvas Matrix Background Effect ---
+    const canvas = document.getElementById('matrix-canvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    const chars = '0110010101010101010101010101010101010101010101010';
+    const fontSize = 14;
+    let columns = Math.floor(canvas.width / fontSize);
+    let drops = Array(columns).fill(1);
+
+    function drawMatrix() {
+      const isLight = document.documentElement.getAttribute('data-bs-theme') === 'light';
+      ctx.fillStyle = isLight ? 'rgba(244, 246, 249, 0.15)' : 'rgba(10, 12, 16, 0.15)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = isLight ? 'rgba(0, 119, 153, 0.35)' : 'rgba(0, 243, 255, 0.45)';
+      ctx.font = fontSize + 'px monospace';
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = chars.charAt(Math.floor(Math.random() * chars.length));
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+    }
+    setInterval(drawMatrix, 40);
+
+    // --- 2. Dark / Light Mode Toggle ---
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    themeToggleBtn.addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-bs-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-bs-theme', newTheme);
+      themeToggleBtn.innerHTML = newTheme === 'dark' 
+        ? '<i class="fa-solid fa-moon me-1"></i> Modo' 
+        : '<i class="fa-solid fa-sun me-1"></i> Modo';
+    });
+
+    // --- 3. Filtro Dinámico de Proyectos ---
+    function filterProjects(category) {
+      const items = document.querySelectorAll('.project-item');
+      const buttons = document.querySelectorAll('.btn-filter');
+
+      buttons.forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      items.forEach(item => {
+        if (category === 'all' || item.classList.contains(category)) {
+          item.style.display = 'block';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+
+    // --- 4. Validación y Envío del Formulario (EmailJS / Simulador) ---
+    (function () {
+      'use strict'
+      const form = document.getElementById('contact-form');
+      const alertBox = document.getElementById('form-alert');
+
+      // Inicializar EmailJS (Colocar tu USER_ID real aquí si deseas envíos directos)
+      if (typeof emailjs !== 'undefined') {
+        emailjs.init("YOUR_PUBLIC_KEY");
+      }
+
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        if (!form.checkValidity()) {
+          event.stopPropagation();
+          form.classList.add('was-validated');
+        } else {
